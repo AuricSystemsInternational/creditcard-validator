@@ -4,6 +4,7 @@
 module CreditCardValidator exposing  
     ( CardType(AM,DS,MC,VI,DC,UK)
     , CardTypeInfo
+    , CreditCardNumber
     , ValidationResult
     , Range
     , validate
@@ -15,19 +16,20 @@ module CreditCardValidator exposing
     , numberInStartsWithRange
     , cardMatchesRange
     , filterByCardTypes
+    , toCleanCCNumber
     )
 
 {-| This library allows validation of a creditcard number potentially limiting by accepted card types. 
 For example, if your business only accepts Mastercard and Visa you can limit the valid cards to those types.
 
 # Definition
-@docs CardType, CardTypeInfo, ValidationResult, Range
+@docs CardType, CardTypeInfo, CreditCardNumber, ValidationResult, Range
 
 # Validation
 @docs validate
 
 # Helpers
-@docs mopToCardType, validCardLength, findNumberInBetweenRange, allCardTypes, cardTypeByBinRange, numberInStartsWithRange, cardMatchesRange, filterByCardTypes
+@docs mopToCardType, validCardLength, findNumberInBetweenRange, allCardTypes, cardTypeByBinRange, numberInStartsWithRange, cardMatchesRange, filterByCardTypes, toCleanCCNumber
 -}
 
 import Payment.CreditCard.Validation as LuhnValidation
@@ -71,7 +73,7 @@ type alias ValidationResult =
     , cardTypeValid : Bool
     }
 
-
+{-|-}
 type alias CreditCardNumber =
     String
 
