@@ -1,16 +1,41 @@
 -- Copyright (c) 2017-2018 Auric Systems International. All rights reserved.
 -- License: 3-Clause BSD License. See accompanying LICENSE file.
 
+module CreditCardValidator exposing  
+    ( CardType(AM,DS,MC,VI,DC,UK)
+    , CardTypeInfo
+    , ValidationResult
+    , Range
+    , validate
+    , mopToCardType
+    , validCardLength
+    , findNumberInBetweenRange
+    , allCardTypes
+    , cardTypeByBinRange
+    , numberInStartsWithRange
+    , cardMatchesRange
+    , filterByCardTypes
+    )
 
-module CreditCardValidator exposing (..)
+{-| This library allows validation of a creditcard number potentially limiting by accepted card types. 
+For example, if your business only accepts Mastercard and Visa you can limit the valid cards to those types.
+
+# Definition
+@docs CardType, CardTypeInfo, ValidationResult, Range
+
+# Validation
+@docs validate
+
+# Helpers
+@docs mopToCardType, validCardLength, findNumberInBetweenRange, allCardTypes, cardTypeByBinRange, numberInStartsWithRange, cardMatchesRange, filterByCardTypes
+-}
 
 import Payment.CreditCard.Validation as LuhnValidation
 import Regex exposing (regex)
 
 
---add other card types here
-
-
+{-| Card types supported by this library are: American Express (AM), Discover (DS), Diners Club (DC), Mastercard (MC) and VISA (VI).
+-}
 type CardType
     = AM
     | DS
@@ -20,16 +45,14 @@ type CardType
     | UK -- unknown card
 
 
-
--- need type for range : It can be a string or a range with starting and ending digits
--- each type of range needs different range checking
-
-
+{-| Represents possible ranges for a creditcard number. It can be a string or a range with starting and ending digits
+-}
 type Range
     = StartsWithRange String
     | InBetweenRange String String
 
-
+{-| 
+-}
 type alias CardTypeInfo =
     { name : String
     , cardType : CardType
@@ -37,7 +60,9 @@ type alias CardTypeInfo =
     , valid_lengths : List Int
     }
 
-
+{-| A card number can match multiple card types. 
+Overall, a number is valid when it's valid according to [luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm) with valid length and type.  
+-}
 type alias ValidationResult =
     { card_types : List (Maybe CardTypeInfo) -- can match multiple card types
     , valid : Bool -- overall valid
@@ -51,6 +76,8 @@ type alias CreditCardNumber =
     String
 
 
+{-| List of all card type information
+-}
 allCardTypes : List CardTypeInfo
 allCardTypes =
     [ { name = "amex"
@@ -115,10 +142,8 @@ allCardTypes =
     ]
 
 
-
--- converts from mop to card type
-
-
+{-| Converts from strin MOP (Method of Payment) to CardType
+-}
 mopToCardType : String -> CardType
 mopToCardType mop =
     case mop of
@@ -140,7 +165,7 @@ mopToCardType mop =
         _ ->
             UK
 
-
+{-|-}
 filterByCardTypes : List CardTypeInfo -> List CardType -> List CardTypeInfo
 filterByCardTypes cardInfoList cardTypeList =
     let
@@ -163,17 +188,18 @@ filterByCardTypes cardInfoList cardTypeList =
     filteredCardTypeList
 
 
+{-|-}
 toCleanCCNumber : String -> CreditCardNumber
 toCleanCCNumber raw =
     raw
         |> Regex.replace Regex.All (regex "[ -]+") (always "")
 
-
+{-|-}
 numberInStartsWithRange : String -> String -> Bool
 numberInStartsWithRange range ccNumber =
     String.startsWith range ccNumber
 
-
+{-|-}
 findNumberInBetweenRange : CreditCardNumber -> String -> String -> Bool
 findNumberInBetweenRange ccNumber startRange endRange =
     let
@@ -195,7 +221,7 @@ findNumberInBetweenRange ccNumber startRange endRange =
     in
     not startsWithZero && (rangeCardInt >= startRangeInt && rangeCardInt <= endRangeInt)
 
-
+{-|-}
 cardMatchesRange : CreditCardNumber -> List Range -> Bool
 cardMatchesRange cardNumber rangeList =
     let
@@ -213,7 +239,7 @@ cardMatchesRange cardNumber rangeList =
     in
     matches
 
-
+{-|-}
 cardTypeByBinRange : CreditCardNumber -> List CardTypeInfo -> Maybe CardTypeInfo
 cardTypeByBinRange ccNumber cardInfoList =
     -- find card info whose ranges contain a pattern that the card number matches
@@ -225,17 +251,18 @@ cardTypeByBinRange ccNumber cardInfoList =
         --   |> Debug.log "All matched card types: "
         |> List.head
 
-
+{-| Finds whether card length is one of the valid lengths for the type
+-}
 validCardLength : CardTypeInfo -> CreditCardNumber -> Bool
 validCardLength cardTypeInfo cleanedNumber =
-    -- whether card length is one of the valid lengths for the type
     let
         cardLen =
             cleanedNumber |> String.length
     in
     cardTypeInfo.valid_lengths |> List.any (\len -> len == cardLen)
 
-
+{-| Find whether a creditcard number is valid. You can limit what card types are eligible for the validation attempt.
+-}
 validate : String -> List CardType -> ValidationResult
 validate rawNumber limitToCardTypes =
     -- 1. filter allCardTypes by limitToCardTypes
