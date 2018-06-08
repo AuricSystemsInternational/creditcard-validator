@@ -78,7 +78,7 @@ type alias CreditCardNumber =
     String
 
 
-{-| List of all card type information
+{-| List of CardTypeInfo for all supported types 
 -}
 allCardTypes : List CardTypeInfo
 allCardTypes =
@@ -144,7 +144,7 @@ allCardTypes =
     ]
 
 
-{-| Converts from strin MOP (Method of Payment) to CardType
+{-| Converts from string MOP (Method of Payment) to CardType
 -}
 mopToCardType : String -> CardType
 mopToCardType mop =
@@ -241,10 +241,10 @@ cardMatchesRange cardNumber rangeList =
     in
     matches
 
-{-|-}
+{-| Find card info whose ranges contain a pattern that the card number matches
+-}
 cardTypeByBinRange : CreditCardNumber -> List CardTypeInfo -> Maybe CardTypeInfo
 cardTypeByBinRange ccNumber cardInfoList =
-    -- find card info whose ranges contain a pattern that the card number matches
     cardInfoList
         |> List.filter
             (\cardInfo ->
