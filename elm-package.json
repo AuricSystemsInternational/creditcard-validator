@@ -1,5 +1,5 @@
 {
-    "version": "0.9.2",
+    "version": "1.0.0",
     "summary": "Determine the brand of a credit card number",
     "repository": "https://github.com/AuricSystemsInternational/creditcard-validator.git",
     "license": "BSD-3-Clause",
