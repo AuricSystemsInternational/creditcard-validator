@@ -1,11 +1,9 @@
-module CreditCardValidatorTests exposing (..)
-
-import Expect exposing (Expectation)
-import CreditCardValidator as CCV exposing (..)
-
+module CreditCardValidatorTests exposing (TestCard, all, allTestCards, cardInfoForType, sample, unknownCardLength, unknownCardType, validateTest)
 
 --import Fuzz exposing (Fuzzer, int, list, string)
 
+import CreditCardValidator as CCV exposing (..)
+import Expect exposing (Expectation)
 import Test exposing (..)
 
 
@@ -81,18 +79,19 @@ validateTest testCard =
         result =
             CCV.validate rawNumber limitToCardTypes
     in
-        result
+    result
 
-sample: Test 
-sample = 
+
+sample : Test
+sample =
     describe "Sample"
         [ describe "sample1"
-            [test "add" <|
+            [ test "add" <|
                 \_ ->
-                    Expect.equal 2 (1+1)            
+                    Expect.equal 2 (1 + 1)
             ]
-
         ]
+
 
 all : Test
 all =
@@ -107,9 +106,9 @@ all =
                         cardInfos =
                             CCV.filterByCardTypes CCV.allCardTypes cardTypes
                     in
-                        cardInfos
-                            |> List.length
-                            |> Expect.equal 1
+                    cardInfos
+                        |> List.length
+                        |> Expect.equal 1
             , test "FilterByCardTypes gets 2 correct card types" <|
                 \_ ->
                     let
@@ -119,9 +118,9 @@ all =
                         cardInfos =
                             CCV.filterByCardTypes CCV.allCardTypes cardTypes
                     in
-                        cardInfos
-                            |> List.length
-                            |> Expect.equal 2
+                    cardInfos
+                        |> List.length
+                        |> Expect.equal 2
             , test "Card matches a range for card type " <|
                 \_ ->
                     let
@@ -131,9 +130,9 @@ all =
                                 |> List.head
                                 |> Maybe.withDefault unknownCardType
                     in
-                        CCV.cardMatchesRange "6011000995500000"
-                            diCardType.bins
-                            |> Expect.equal True
+                    CCV.cardMatchesRange "6011000995500000"
+                        diCardType.bins
+                        |> Expect.equal True
             , test "Card DOES NOT match a range for card type " <|
                 \_ ->
                     let
@@ -143,9 +142,9 @@ all =
                                 |> List.head
                                 |> Maybe.withDefault unknownCardType
                     in
-                        CCV.cardMatchesRange "6011000995500000"
-                            diCardType.bins
-                            |> Expect.equal False
+                    CCV.cardMatchesRange "6011000995500000"
+                        diCardType.bins
+                        |> Expect.equal False
             , test "Number in StartsWith range" <|
                 \_ ->
                     CCV.numberInStartsWithRange "34" "341134113411347"
@@ -172,10 +171,10 @@ all =
                         cardLen =
                             16
                     in
-                        CCV.validCardLength
-                            mcCardType
-                            "5473551111111117"
-                            |> Expect.equal True
+                    CCV.validCardLength
+                        mcCardType
+                        "5473551111111117"
+                        |> Expect.equal True
             , test "Validate card successful with valid clean number" <|
                 \_ ->
                     let
@@ -188,7 +187,7 @@ all =
                         result =
                             CCV.validate rawNumber limitToCardTypes
                     in
-                        result.valid |> Expect.equal True
+                    result.valid |> Expect.equal True
             , test "Validate card FAILED with invalid clean number" <|
                 \_ ->
                     let
@@ -201,7 +200,7 @@ all =
                         result =
                             CCV.validate rawNumber limitToCardTypes
                     in
-                        result.valid |> Expect.equal False
+                    result.valid |> Expect.equal False
             , test
                 "mop to card Type"
               <|
@@ -220,7 +219,7 @@ all =
                         result =
                             validateTest card
                     in
-                        result.valid |> Expect.notEqual True
+                    result.valid |> Expect.notEqual True
 
             -- , only <|
             --     describe "only"
@@ -246,14 +245,14 @@ all =
 
                                             --      |> Debug.log "validateTest result: "
                                         in
-                                            result.valid |> Expect.equal True
+                                        result.valid |> Expect.equal True
                                     )
                     in
-                        testResults
-                            |> List.all
-                                (\result ->
-                                    result == Expect.pass
-                                )
-                            |> Expect.equal True
+                    testResults
+                        |> List.all
+                            (\result ->
+                                result == Expect.pass
+                            )
+                        |> Expect.equal True
             ]
         ]
