@@ -40,9 +40,9 @@ type alias TestCard =
 allTestCards : List TestCard
 allTestCards =
     [ TestCard "AM" "341134113411347"
-    , TestCard "AM" "377777777777770"
+    , TestCard "AM" "377777777777770" 
     , TestCard "DS" "6011000994116667"
-    , TestCard "DS" "6011000995500000"
+    , TestCard "DS" "6011000995500000" 
     , TestCard "DS" "6011016011016011"
     , TestCard "DS" "6559906559906557"
     , TestCard "MC" "5110969999999990"
@@ -68,14 +68,12 @@ validateTest testCard =
         l =
             testCard
 
-        -- |> Debug.log "THE CARD:"
         rawNumber =
             testCard.cardNumber
 
         limitToCardTypes =
             [ CCV.mopToCardType testCard.cardType ]
 
-        --    |> Debug.log "limitToCardTypes: "
         result =
             CCV.validate rawNumber limitToCardTypes
     in
@@ -206,7 +204,6 @@ all =
               <|
                 \_ ->
                     CCV.mopToCardType "DS"
-                        --    |> Debug.log "Mop to card type: "
                         |> Expect.equal CCV.DS
             , test
                 "Card number starting with 0 fails validation"
@@ -221,17 +218,6 @@ all =
                     in
                     result.valid |> Expect.notEqual True
 
-            -- , only <|
-            --     describe "only"
-            --         [ test "find bug wth validate" <|
-            --             \_ ->
-            --                 let
-            --                     result =
-            --                         validateTest (TestCard "DS" "36413711111115")
-            --                             |> Debug.log "Failed validation: "
-            --                 in
-            --                     result.valid |> Expect.equal True
-            --         ]
             , test "validate all test cards" <|
                 \_ ->
                     let
@@ -242,8 +228,6 @@ all =
                                         let
                                             result =
                                                 validateTest card
-
-                                            --      |> Debug.log "validateTest result: "
                                         in
                                         result.valid |> Expect.equal True
                                     )

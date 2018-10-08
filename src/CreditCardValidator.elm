@@ -41,7 +41,7 @@ For example, if your business only accepts Mastercard and Visa you can limit the
 
 -}
 
-import LuhnValidation
+import Payment.CreditCard.Validation as LuhnValidation
 import Regex
 
 
