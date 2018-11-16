@@ -3,7 +3,7 @@
     "name": "AuricSystemsInternational/creditcard-validator",
     "summary": "Determine the brand of a credit card number",
     "license": "BSD-3-Clause",
-    "version": "2.0.0",
+    "version": "1.0.1",
     "exposed-modules": [
         "CreditCardValidator"
     ],
