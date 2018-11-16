@@ -1,11 +1,9 @@
-module CreditCardValidatorTests exposing (..)
-
-import Expect exposing (Expectation)
-import CreditCardValidator as CCV exposing (..)
-
+module CreditCardValidatorTests exposing (TestCard, all, allTestCards, cardInfoForType, sample, unknownCardLength, unknownCardType, validateTest)
 
 --import Fuzz exposing (Fuzzer, int, list, string)
 
+import CreditCardValidator as CCV exposing (..)
+import Expect exposing (Expectation)
 import Test exposing (..)
 
 
@@ -42,9 +40,9 @@ type alias TestCard =
 allTestCards : List TestCard
 allTestCards =
     [ TestCard "AM" "341134113411347"
-    , TestCard "AM" "377777777777770"
+    , TestCard "AM" "377777777777770" 
     , TestCard "DS" "6011000994116667"
-    , TestCard "DS" "6011000995500000"
+    , TestCard "DS" "6011000995500000" 
     , TestCard "DS" "6011016011016011"
     , TestCard "DS" "6559906559906557"
     , TestCard "MC" "5110969999999990"
@@ -70,29 +68,28 @@ validateTest testCard =
         l =
             testCard
 
-        -- |> Debug.log "THE CARD:"
         rawNumber =
             testCard.cardNumber
 
         limitToCardTypes =
             [ CCV.mopToCardType testCard.cardType ]
 
-        --    |> Debug.log "limitToCardTypes: "
         result =
             CCV.validate rawNumber limitToCardTypes
     in
-        result
+    result
 
-sample: Test 
-sample = 
+
+sample : Test
+sample =
     describe "Sample"
         [ describe "sample1"
-            [test "add" <|
+            [ test "add" <|
                 \_ ->
-                    Expect.equal 2 (1+1)            
+                    Expect.equal 2 (1 + 1)
             ]
-
         ]
+
 
 all : Test
 all =
@@ -107,9 +104,9 @@ all =
                         cardInfos =
                             CCV.filterByCardTypes CCV.allCardTypes cardTypes
                     in
-                        cardInfos
-                            |> List.length
-                            |> Expect.equal 1
+                    cardInfos
+                        |> List.length
+                        |> Expect.equal 1
             , test "FilterByCardTypes gets 2 correct card types" <|
                 \_ ->
                     let
@@ -119,9 +116,9 @@ all =
                         cardInfos =
                             CCV.filterByCardTypes CCV.allCardTypes cardTypes
                     in
-                        cardInfos
-                            |> List.length
-                            |> Expect.equal 2
+                    cardInfos
+                        |> List.length
+                        |> Expect.equal 2
             , test "Card matches a range for card type " <|
                 \_ ->
                     let
@@ -131,9 +128,9 @@ all =
                                 |> List.head
                                 |> Maybe.withDefault unknownCardType
                     in
-                        CCV.cardMatchesRange "6011000995500000"
-                            diCardType.bins
-                            |> Expect.equal True
+                    CCV.cardMatchesRange "6011000995500000"
+                        diCardType.bins
+                        |> Expect.equal True
             , test "Card DOES NOT match a range for card type " <|
                 \_ ->
                     let
@@ -143,9 +140,9 @@ all =
                                 |> List.head
                                 |> Maybe.withDefault unknownCardType
                     in
-                        CCV.cardMatchesRange "6011000995500000"
-                            diCardType.bins
-                            |> Expect.equal False
+                    CCV.cardMatchesRange "6011000995500000"
+                        diCardType.bins
+                        |> Expect.equal False
             , test "Number in StartsWith range" <|
                 \_ ->
                     CCV.numberInStartsWithRange "34" "341134113411347"
@@ -172,10 +169,10 @@ all =
                         cardLen =
                             16
                     in
-                        CCV.validCardLength
-                            mcCardType
-                            "5473551111111117"
-                            |> Expect.equal True
+                    CCV.validCardLength
+                        mcCardType
+                        "5473551111111117"
+                        |> Expect.equal True
             , test "Validate card successful with valid clean number" <|
                 \_ ->
                     let
@@ -188,7 +185,7 @@ all =
                         result =
                             CCV.validate rawNumber limitToCardTypes
                     in
-                        result.valid |> Expect.equal True
+                    result.valid |> Expect.equal True
             , test "Validate card FAILED with invalid clean number" <|
                 \_ ->
                     let
@@ -201,13 +198,12 @@ all =
                         result =
                             CCV.validate rawNumber limitToCardTypes
                     in
-                        result.valid |> Expect.equal False
+                    result.valid |> Expect.equal False
             , test
                 "mop to card Type"
               <|
                 \_ ->
                     CCV.mopToCardType "DS"
-                        --    |> Debug.log "Mop to card type: "
                         |> Expect.equal CCV.DS
             , test
                 "Card number starting with 0 fails validation"
@@ -220,19 +216,8 @@ all =
                         result =
                             validateTest card
                     in
-                        result.valid |> Expect.notEqual True
+                    result.valid |> Expect.notEqual True
 
-            -- , only <|
-            --     describe "only"
-            --         [ test "find bug wth validate" <|
-            --             \_ ->
-            --                 let
-            --                     result =
-            --                         validateTest (TestCard "DS" "36413711111115")
-            --                             |> Debug.log "Failed validation: "
-            --                 in
-            --                     result.valid |> Expect.equal True
-            --         ]
             , test "validate all test cards" <|
                 \_ ->
                     let
@@ -243,17 +228,15 @@ all =
                                         let
                                             result =
                                                 validateTest card
-
-                                            --      |> Debug.log "validateTest result: "
                                         in
-                                            result.valid |> Expect.equal True
+                                        result.valid |> Expect.equal True
                                     )
                     in
-                        testResults
-                            |> List.all
-                                (\result ->
-                                    result == Expect.pass
-                                )
-                            |> Expect.equal True
+                    testResults
+                        |> List.all
+                            (\result ->
+                                result == Expect.pass
+                            )
+                        |> Expect.equal True
             ]
         ]
