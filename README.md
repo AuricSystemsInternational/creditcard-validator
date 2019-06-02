@@ -17,11 +17,11 @@ See test modules for examples.
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning.
-For the versions available, see the [tags on this repository](https://github.com/AuricSystemsInternational/creditcard-brand/tags)
+For the versions available, see the [tags on this repository](https://github.com/AuricSystemsInternational/creditcard-validator/tags)
 
 ## License
 
-This project is licensed under the BSD 3-clause "New" or "Revised" license - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the BSD 3-clause "New" or "Revised" license - see the [LICENSE](https://github.com/AuricSystemsInternational/creditcard-validator/blob/master/LICENSE) file for details.
 
 ## Contributors
 
